@@ -42,7 +42,7 @@ class GPT2SentimentClassifier(torch.nn.Module):
 
   def __init__(self, config):
     super(GPT2SentimentClassifier, self).__init__()
-    self.num_labels = config.num_labels
+    self.num_labels = config.num_labels # 5
     self.gpt = GPT2Model.from_pretrained()
 
     # Pretrain mode does not require updating GPT paramters.
@@ -55,7 +55,8 @@ class GPT2SentimentClassifier(torch.nn.Module):
 
     ### TODO: Create any instance variables you need to classify the sentiment of BERT embeddings.
     ### YOUR CODE HERE
-    raise NotImplementedError
+    self.final_dropout = torch.nn.Dropout(config.hidden_dropout_prob)
+    self.final_linear = torch.nn.Linear(config.hidden_size, self.num_labels)
 
 
   def forward(self, input_ids, attention_mask):
@@ -65,9 +66,18 @@ class GPT2SentimentClassifier(torch.nn.Module):
     ###       HINT: You should consider what is an appropriate return value given that
     ###       the training loop currently uses F.cross_entropy as the loss function.
     ### YOUR CODE HERE
-    raise NotImplementedError
 
+    # 1. encode sentences
+    gpt2model_output = self.gpt(input_ids, attention_mask) # GPT2Model class's forward function return: {'last_hidden_state': sequence_output, 'last_token': last_token}
+    last_token = gpt2model_output['last_token']
 
+    # 2. Dropout 
+    last_token = self.final_dropout(last_token)
+
+    # 3. Linear: [bs, hidden_size] -> Logits [bs, num_labels] 
+    last_token_logits = self.final_linear(last_token)
+
+    return last_token_logits
 
 class SentimentDataset(Dataset):
   def __init__(self, dataset, args):

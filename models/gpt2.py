@@ -47,19 +47,19 @@ class GPT2Model(GPTPreTrainedModel):
     input_shape = input_ids.size()
     seq_length = input_shape[1]
 
-    inputs_embeds = None
+    # 1. Token embeddings: input ids [bs, seq_len] -> embed vectors [bs, seq_len, embed_dim (same as hidden_size)]
+    # Based on the assignment handout, "Each embedding layer has a dimensionality of 768"
+    inputs_embeds = self.word_embedding(input_ids)
 
-    ### YOUR CODE HERE
-    raise NotImplementedError
-
-
+    # 2. Position embeddings: pos ids [1, seq_len] -> embed vectors [1, seq_len, embed_dim]
     pos_ids = self.position_ids[:, :seq_length]
-    pos_embeds = None
+    pos_embeds = self.pos_embedding(pos_ids)
 
-    ### TODO: Use pos_ids to get position embedding from self.pos_embedding into pos_embeds.
-    ###       Then, add two embeddings together; then apply dropout and return.
-    ### YOUR CODE HERE
-    raise NotImplementedError
+    # 3. Sum token + position embeddings, then apply dropout
+    embeddings = inputs_embeds + pos_embeds
+    embeddings = self.embed_dropout(embeddings)
+    
+    return embeddings
 
 
   def encode(self, hidden_states, attention_mask):

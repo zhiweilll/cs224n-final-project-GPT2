@@ -79,3 +79,33 @@ conda activate cs224n_dfp
 python3 sanity_check.py
 python3 optimizer_test.py
 ```
+
+
+
+## Sentiment Classification — Model Performance (Dev)
+
+## SST Dev
+
+| Model               | Dev Accuracy | Best epoch (by dev acc) |
+|---------------------|-------------|--------------------------|
+| Full model          | **51.0%**   | 4 (dev acc 0.510)        |
+| Last linear layer   | **45.7%**   | 7 (dev acc 0.457)        |
+
+- Full model: train acc rises to ~68%, dev acc peaks at 51.0% at epoch 4 then drifts down (overfitting).
+- Last linear layer: lower capacity; dev acc peaks at 45.7% at epoch 7.
+
+## CFIMDB Dev
+
+| Model               | Dev Accuracy | Best epoch (by dev acc) |
+|---------------------|-------------|--------------------------|
+| Full model          | **98.4%**   | 6 (dev acc 0.984)        |
+| Last linear layer   | **85.3%**   | 5 (dev acc 0.853)        |
+
+- Full model: very high dev acc (98.4%); CFIMDB is easier and benefits from full fine-tuning.
+- Last linear layer: 85.3% dev; only the classifier head is trained.
+
+## Summary
+
+- **SST**: Full model outperforms last-linear-layer on dev (51.0% vs 45.7%).
+- **CFIMDB**: Full model strongly outperforms last-linear-layer (98.4% vs 85.3%).
+- Fine-tuning the full model gives better dev performance on both datasets.

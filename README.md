@@ -50,3 +50,32 @@ project [Implement BERT](https://web.stanford.edu/class/archive/cs/cs224n/cs224n
 
 Parts of the code are from the [`transformers`](https://github.com/huggingface/transformers)
 library ([Apache License 2.0](./LICENSE)).
+
+
+
+
+
+
+
+
+## GCP VM Setup
+
+Based on the handout, you develop your code on your local machine using PyTorch without GPUs, and move to your Google Cloud VM only after you’ve debugged your code and are ready to train. It suggest you to use a private GitHub repository to manage your codebase and sync files between the two machines and between team members. 
+
+In 6.3 Training GPT-2 for Sentiment Classification, you should move your codes to VM and train your models. Follow the steps below to setup your VM for this project.
+
+
+```
+git clone https://github.com/zhiweilll/cs224n-final-project-GPT2.git
+cd cs224n-final-project-GPT2
+```
+
+```
+source setup.sh
+conda activate cs224n_dfp
+```
+
+```
+python3 sanity_check.py
+python3 optimizer_test.py
+```

@@ -72,7 +72,16 @@ class ParaphraseGPT(nn.Module):
 
     'Takes a batch of sentences and produces embeddings for them.'
     ### YOUR CODE HERE
-    raise NotImplementedError
+
+    # 1. encode sentences
+    gpt2model_output = self.gpt(input_ids, attention_mask) # GPT2Model class's forward function return: {'last_hidden_state': sequence_output, 'last_token': last_token}
+    last_token = gpt2model_output['last_token']
+
+    # 2. Linear (predict next token)
+    # a token vector [bs, hidden_size] -> Logits [bs, vocab_size], prob dist over all tokens in the vocabulary
+    last_token_logits = self.gpt.hidden_state_to_token(last_token)
+
+    return last_token_logits
 
 
 

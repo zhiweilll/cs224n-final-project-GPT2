@@ -105,8 +105,11 @@ class GPT2Model(GPTPreTrainedModel):
 
       return hidden_state(s) * E^T
     """
-    ### YOUR CODE HERE
-    raise NotImplementedError
+    # Weight tying: reuse the word embedding matrix as the output projection
+    # hidden_state: [bs, hidden_size]  or  [bs, seq_len, hidden_size]
+    # word_embedding.weight: [vocab_size, hidden_size]
+    # output logits: [bs, vocab_size]  or  [bs, seq_len, vocab_size]
+    return hidden_state @ self.word_embedding.weight.T
 
 
   @classmethod
